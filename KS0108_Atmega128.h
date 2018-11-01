@@ -15,6 +15,7 @@
 
 void port_init(void);
 void ks0108_on(void);
+void ks0108_off(void);
 uint8_t ks0108_GPIO(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr);
 
 
