@@ -60,6 +60,19 @@ void ks0108_on(void)
 	_delay_us(5);
 }
 
+void ks0108_off(void)
+{
+	RS_L;
+	EN_L;
+	CS0_L;
+	CS1_L;
+	PORT_DB=(1<<DB5)|(1<<DB4)|(1<<DB3)|(1<<DB2)|(1<<DB1);
+	EN_H;
+	_delay_us(5);
+	EN_L;
+	_delay_us(5);
+}
+
 uint8_t ks0108_GPIO(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)
 {
 	switch(msg)
@@ -89,7 +102,7 @@ uint8_t ks0108_GPIO(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)
 		else DB2_L;
 		break;
 		case U8X8_MSG_GPIO_D3:				// D3 pin: Output level in arg_int
-		if(arg_int)DB3_H;
+		if(arg_int) DB3_H;
 		else DB3_L;
 		break;
 		case U8X8_MSG_GPIO_D4:				// D4 pin: Output level in arg_int
