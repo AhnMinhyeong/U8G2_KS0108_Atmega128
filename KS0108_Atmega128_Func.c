@@ -6,30 +6,35 @@
  */ 
 #include "KS0108_Atmega128.h"
 
-#define RS_H PORTA|=(1<<1)
-#define RS_L PORTA&=~(1<<1)
-#define EN_H PORTA|=(1<<0)
-#define EN_L PORTA&=~(1<<0)
-#define CS0_H PORTA|=(1<<2)
-#define CS0_L PORTA&=~(1<<2)
-#define CS1_H PORTA|=(1<<3)
-#define CS1_L PORTA&=~(1<<3)
-#define DB0_H PORTC|=(1<<0)
-#define DB0_L PORTC&=~(1<<0)
-#define DB1_H PORTC|=(1<<1)
-#define DB1_L PORTC&=~(1<<1)
-#define DB2_H PORTC|=(1<<2)
-#define DB2_L PORTC&=~(1<<2)
-#define DB3_H PORTC|=(1<<3)
-#define DB3_L PORTC&=~(1<<3)
-#define DB4_H PORTC|=(1<<4)
-#define DB4_L PORTC&=~(1<<4)
-#define DB5_H PORTC|=(1<<5)
-#define DB5_L PORTC&=~(1<<5)
-#define DB6_H PORTC|=(1<<6)
-#define DB6_L PORTC&=~(1<<6)
-#define DB7_H PORTC|=(1<<7)
-#define DB7_L PORTC&=~(1<<7)
+#define PORT_DB PORTC
+#define PORT_COM PORTA
+#define DDR_DB DDRC
+#define DDR_COM DDRA
+
+#define RS_H PORT_COM|=(1<<1)
+#define RS_L PORT_COM&=~(1<<1)
+#define EN_H PORT_COM|=(1<<0)
+#define EN_L PORT_COM&=~(1<<0)
+#define CS0_H PORT_COM|=(1<<2)
+#define CS0_L PORT_COM&=~(1<<2)
+#define CS1_H PORT_COM|=(1<<3)
+#define CS1_L PORT_COM&=~(1<<3)
+#define DB0_H PORT_DB|=(1<<0)
+#define DB0_L PORT_DB&=~(1<<0)
+#define DB1_H PORT_DB|=(1<<1)
+#define DB1_L PORT_DB&=~(1<<1)
+#define DB2_H PORT_DB|=(1<<2)
+#define DB2_L PORT_DB&=~(1<<2)
+#define DB3_H PORT_DB|=(1<<3)
+#define DB3_L PORT_DB&=~(1<<3)
+#define DB4_H PORT_DB|=(1<<4)
+#define DB4_L PORT_DB&=~(1<<4)
+#define DB5_H PORT_DB|=(1<<5)
+#define DB5_L PORT_DB&=~(1<<5)
+#define DB6_H PORT_DB|=(1<<6)
+#define DB6_L PORT_DB&=~(1<<6)
+#define DB7_H PORT_DB|=(1<<7)
+#define DB7_L PORT_DB&=~(1<<7)
 #define DB0 0
 #define DB1 1
 #define DB2 2
@@ -38,17 +43,35 @@
 #define DB5 5
 #define DB6 6
 #define DB7 7
-#define PORT_DB PORTC
-#define PORT_COM PORTA
 
 void port_init(void)
 {
-	PORT_DB=0xff;
-	PORT_COM=0x0f;
+	DDR_DB=0xff;
+	DDR_COM=0x0f;
 }
 
 void ks0108_on(void)
 {
+	RS_L;
+	EN_L;
+	CS0_L;
+	CS1_L;
+	PORT_DB=(1<<DB6);
+	EN_H;
+	_delay_us(5);
+	EN_L;
+	_delay_us(5);
+//////////////Set Address Y to 0
+	RS_L;
+	EN_L;
+	CS0_L;
+	CS1_L;
+	PORT_DB=(1<<DB7)|(1<<DB6);
+	EN_H;
+	_delay_us(5);
+	EN_L;
+	_delay_us(5);
+//////////////Set Address X to 0
 	RS_L;
 	EN_L;
 	CS0_L;
@@ -58,6 +81,7 @@ void ks0108_on(void)
 	_delay_us(5);
 	EN_L;
 	_delay_us(5);
+/////////////Turn on Display
 }
 
 void ks0108_off(void)
@@ -136,10 +160,12 @@ uint8_t ks0108_GPIO(u8x8_t *u8x8, uint8_t msg, uint8_t arg_int, void *arg_ptr)
 		case U8X8_MSG_GPIO_RESET:			// Reset pin: Output level in arg_int
 		break;
 		case U8X8_MSG_GPIO_CS1:				// CS1 (chip select) pin: Output level in arg_int
+
 		if(arg_int) CS1_H;
 		else CS1_L;
 		break;
 		case U8X8_MSG_GPIO_CS2:				// CS2 (chip select) pin: Output level in arg_int
+
 		break;
 		default:
 		u8x8_SetGPIOResult(u8x8, 1);			// default return value
