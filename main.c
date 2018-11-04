@@ -14,11 +14,10 @@ int main(void)
 {
 	int i=0,j=0;
 	
-	port_init();
 	DDRD=0x88;
 	PORTD=0x70;
 	//ks0108_off();
-	ks0108_on();
+	init_ks0108();
 	u8g2_Setup_ks0108_128x64_f(&u8g2_ks0108, U8G2_R0, u8x8_byte_ks0108, ks0108_GPIO);
 	u8g2_SetFont(&u8g2_ks0108,u8g2_font_ncenB08_tf);
 	u8g2_ClearBuffer(&u8g2_ks0108);
