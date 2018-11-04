@@ -50,8 +50,10 @@ void port_init(void)
 	DDR_COM=0x0f;
 }
 
-void ks0108_on(void)
+void init_ks0108(void)
 {
+	port_init();
+
 	RS_L;
 	EN_L;
 	CS0_L;
